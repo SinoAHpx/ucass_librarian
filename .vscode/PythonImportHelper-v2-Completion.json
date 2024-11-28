@@ -65,7 +65,7 @@
         "kind": 2,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "def get_random_uuid():\n    return str(uuid.uuid4()).replace('-', '')\ndef login(username, password):\n    console.print('[bold red]Start login![/bold red]')\n    uuid = get_random_uuid()\n    redirected_response = session.get(f\"https://seat-lx.ucass.edu.cn/authcenter/toLoginPage?redirectUrl=https://seat-lx.ucass.edu.cn/ic-web//auth/token?uuid={uuid}&extInfo=\", headers=GENERAL_HEADERS, allow_redirects=False)\n    login_url = redirected_response.headers[\"Location\"]\n    console.print(f'User login url: {login_url}')\n    response = session.get(login_url, allow_redirects=False)\n    soup = BeautifulSoup(response.text, 'html.parser')",
+        "peekOfCode": "def get_random_uuid():\n    return str(uuid.uuid4()).replace('-', '')\ndef login(username, password):\n    console.print('[bold red]Start login![/bold red]')\n    uuid = get_random_uuid()\n    redirected_response = session.get(f\"https://seat-lx.ucass.edu.cn/authcenter/toLoginPage?redirectUrl=https://seat-lx.ucass.edu.cn/ic-web//auth/token?uuid={uuid}&extInfo=\", headers=GENERAL_HEADERS, allow_redirects=False)\n    # login_url = redirected_response.headers[\"Location\"]\n    login_url = \"https://authserver.ucass.edu.cn/authserver/login?service=http%3A%2F%2Fseat-lx.ucass.edu.cn%2Fauthcenter%2FdoAuth%2F6113ee0c8b244a1792bad68392a1672c\"\n    console.print(f'User login url: {login_url}')\n    response = session.get(login_url, allow_redirects=False)",
         "detail": "main",
         "documentation": {}
     },
@@ -74,7 +74,7 @@
         "kind": 2,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "def login(username, password):\n    console.print('[bold red]Start login![/bold red]')\n    uuid = get_random_uuid()\n    redirected_response = session.get(f\"https://seat-lx.ucass.edu.cn/authcenter/toLoginPage?redirectUrl=https://seat-lx.ucass.edu.cn/ic-web//auth/token?uuid={uuid}&extInfo=\", headers=GENERAL_HEADERS, allow_redirects=False)\n    login_url = redirected_response.headers[\"Location\"]\n    console.print(f'User login url: {login_url}')\n    response = session.get(login_url, allow_redirects=False)\n    soup = BeautifulSoup(response.text, 'html.parser')\n    salt_element = soup.find(id='pwdEncryptSalt')\n    execution_element = soup.find(id='execution')",
+        "peekOfCode": "def login(username, password):\n    console.print('[bold red]Start login![/bold red]')\n    uuid = get_random_uuid()\n    redirected_response = session.get(f\"https://seat-lx.ucass.edu.cn/authcenter/toLoginPage?redirectUrl=https://seat-lx.ucass.edu.cn/ic-web//auth/token?uuid={uuid}&extInfo=\", headers=GENERAL_HEADERS, allow_redirects=False)\n    # login_url = redirected_response.headers[\"Location\"]\n    login_url = \"https://authserver.ucass.edu.cn/authserver/login?service=http%3A%2F%2Fseat-lx.ucass.edu.cn%2Fauthcenter%2FdoAuth%2F6113ee0c8b244a1792bad68392a1672c\"\n    console.print(f'User login url: {login_url}')\n    response = session.get(login_url, allow_redirects=False)\n    soup = BeautifulSoup(response.text, 'html.parser')\n    salt_element = soup.find(id='pwdEncryptSalt')",
         "detail": "main",
         "documentation": {}
     },

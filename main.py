@@ -35,7 +35,8 @@ def login(username, password):
     uuid = get_random_uuid()
     redirected_response = session.get(f"https://seat-lx.ucass.edu.cn/authcenter/toLoginPage?redirectUrl=https://seat-lx.ucass.edu.cn/ic-web//auth/token?uuid={uuid}&extInfo=", headers=GENERAL_HEADERS, allow_redirects=False)
     
-    login_url = redirected_response.headers["Location"]
+    # login_url = redirected_response.headers["Location"]
+    login_url = "https://authserver.ucass.edu.cn/authserver/login?service=http%3A%2F%2Fseat-lx.ucass.edu.cn%2Fauthcenter%2FdoAuth%2F6113ee0c8b244a1792bad68392a1672c"
 
     console.print(f'User login url: {login_url}')
     
