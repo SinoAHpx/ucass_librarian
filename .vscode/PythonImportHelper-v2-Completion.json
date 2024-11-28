@@ -1,0 +1,162 @@
+[
+    {
+        "label": "json",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "json",
+        "description": "json",
+        "detail": "json",
+        "documentation": {}
+    },
+    {
+        "label": "BeautifulSoup",
+        "importPath": "bs4",
+        "description": "bs4",
+        "isExtraImport": true,
+        "detail": "bs4",
+        "documentation": {}
+    },
+    {
+        "label": "execjs",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "execjs",
+        "description": "execjs",
+        "detail": "execjs",
+        "documentation": {}
+    },
+    {
+        "label": "requests",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "requests",
+        "description": "requests",
+        "detail": "requests",
+        "documentation": {}
+    },
+    {
+        "label": "uuid",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "uuid",
+        "description": "uuid",
+        "detail": "uuid",
+        "documentation": {}
+    },
+    {
+        "label": "Console",
+        "importPath": "rich.console",
+        "description": "rich.console",
+        "isExtraImport": true,
+        "detail": "rich.console",
+        "documentation": {}
+    },
+    {
+        "label": "get_encrypted_pwd",
+        "kind": 2,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "def get_encrypted_pwd(orignal, salt):\n    with open('encrypt.js', 'r') as file:\n        js_code = file.read()\n    ctx = execjs.compile(js_code)\n    result = ctx.call('encryptPassword', orignal, salt)\n    return result\ndef get_random_uuid():\n    return str(uuid.uuid4()).replace('-', '')\ndef login(username, password):\n    console.print('[bold red]Start login![/bold red]')",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "get_random_uuid",
+        "kind": 2,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "def get_random_uuid():\n    return str(uuid.uuid4()).replace('-', '')\ndef login(username, password):\n    console.print('[bold red]Start login![/bold red]')\n    uuid = get_random_uuid()\n    redirected_response = session.get(f\"https://seat-lx.ucass.edu.cn/authcenter/toLoginPage?redirectUrl=https://seat-lx.ucass.edu.cn/ic-web//auth/token?uuid={uuid}&extInfo=\", headers=GENERAL_HEADERS, allow_redirects=False)\n    login_url = redirected_response.headers[\"Location\"]\n    console.print(f'User login url: {login_url}')\n    response = session.get(login_url, allow_redirects=False)\n    soup = BeautifulSoup(response.text, 'html.parser')",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "login",
+        "kind": 2,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "def login(username, password):\n    console.print('[bold red]Start login![/bold red]')\n    uuid = get_random_uuid()\n    redirected_response = session.get(f\"https://seat-lx.ucass.edu.cn/authcenter/toLoginPage?redirectUrl=https://seat-lx.ucass.edu.cn/ic-web//auth/token?uuid={uuid}&extInfo=\", headers=GENERAL_HEADERS, allow_redirects=False)\n    login_url = redirected_response.headers[\"Location\"]\n    console.print(f'User login url: {login_url}')\n    response = session.get(login_url, allow_redirects=False)\n    soup = BeautifulSoup(response.text, 'html.parser')\n    salt_element = soup.find(id='pwdEncryptSalt')\n    execution_element = soup.find(id='execution')",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "ticket_auth",
+        "kind": 2,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "def ticket_auth(url: str, use_https: bool = False) -> requests.Response:\n    if use_https:\n        url = url.replace(\"http://\", \"https://\")\n    response = session.get(url, allow_redirects=False)\n    return response\ndef get_ic_cookies():\n    console.print(f'[red]Start get ic cookies![/red]')\n    uuid = get_random_uuid()\n    alreay_login_response = session.get(f\"https://seat-lx.ucass.edu.cn/authcenter/toLoginPage?redirectUrl=https://seat-lx.ucass.edu.cn/ic-web//auth/token?uuid={uuid}&extInfo=\", allow_redirects=False)\n    console.print(f'alreay login status code: [yellow]{alreay_login_response.status_code}[/yellow]')",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "get_ic_cookies",
+        "kind": 2,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "def get_ic_cookies():\n    console.print(f'[red]Start get ic cookies![/red]')\n    uuid = get_random_uuid()\n    alreay_login_response = session.get(f\"https://seat-lx.ucass.edu.cn/authcenter/toLoginPage?redirectUrl=https://seat-lx.ucass.edu.cn/ic-web//auth/token?uuid={uuid}&extInfo=\", allow_redirects=False)\n    console.print(f'alreay login status code: [yellow]{alreay_login_response.status_code}[/yellow]')\n    login_url = alreay_login_response.headers[\"Location\"]\n    # yes again\n    console.print(f'Cookie request login url: [red]{login_url}[/red]')\n    # this session cookie should be saved\n    response = session.get(login_url, allow_redirects=False)",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "USER_AGENT",
+        "kind": 5,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "USER_AGENT = \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36\"\nGENERAL_HEADERS = {\n    'User-Agent': USER_AGENT,\n}\n# some global vars\nconsole = Console()\nsession = requests.Session()\ndef get_encrypted_pwd(orignal, salt):\n    with open('encrypt.js', 'r') as file:\n        js_code = file.read()",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "GENERAL_HEADERS",
+        "kind": 5,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "GENERAL_HEADERS = {\n    'User-Agent': USER_AGENT,\n}\n# some global vars\nconsole = Console()\nsession = requests.Session()\ndef get_encrypted_pwd(orignal, salt):\n    with open('encrypt.js', 'r') as file:\n        js_code = file.read()\n    ctx = execjs.compile(js_code)",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "console",
+        "kind": 5,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "console = Console()\nsession = requests.Session()\ndef get_encrypted_pwd(orignal, salt):\n    with open('encrypt.js', 'r') as file:\n        js_code = file.read()\n    ctx = execjs.compile(js_code)\n    result = ctx.call('encryptPassword', orignal, salt)\n    return result\ndef get_random_uuid():\n    return str(uuid.uuid4()).replace('-', '')",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "session",
+        "kind": 5,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "session = requests.Session()\ndef get_encrypted_pwd(orignal, salt):\n    with open('encrypt.js', 'r') as file:\n        js_code = file.read()\n    ctx = execjs.compile(js_code)\n    result = ctx.call('encryptPassword', orignal, salt)\n    return result\ndef get_random_uuid():\n    return str(uuid.uuid4()).replace('-', '')\ndef login(username, password):",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "login_response",
+        "kind": 5,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "login_response = login('20241141128', 'frNwzTNNeGnAkkq6ADpAqv*ZGvPHYU')\nlogin_cookies = login_response.cookies\n# login_cookies = {\n#     \"happyVoyage\": \"Pqh6Qyak3s4YrkG0DTLC//GJxJaPhOQsLsU7MoZjA6aui0Qw7/6IgweEucvo+TAOp5BSKNV9ybhz8pYYSpCs1gma/eD+oP679oQhMCNd/cJzjFgkFFmFJyTQtiAJUw3cUwoZoxDeBwND8U2dGMI42QU7IXm88D4ob1ikoPFp81U=\",\n#     \"CASTGC\": \"TGT-568719-jrs08ja-RMNPaxJm9w5Noxz6JOUnJ6hPnHdDKj8ywLMRi3Xm4IynfwpGS0SCJbcZKqEnull_main\",\n#     \"JSESSIONID\": \"84AE62F8A8928808ECB4D9A499C50C09\",\n#     \"org.springframework.web.servlet.i18n.CookieLocaleResolver.LOCALE\": \"en\"\n# }\ncookies = get_ic_cookies()\nprint(cookies.cookies.get_dict())",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "login_cookies",
+        "kind": 5,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "login_cookies = login_response.cookies\n# login_cookies = {\n#     \"happyVoyage\": \"Pqh6Qyak3s4YrkG0DTLC//GJxJaPhOQsLsU7MoZjA6aui0Qw7/6IgweEucvo+TAOp5BSKNV9ybhz8pYYSpCs1gma/eD+oP679oQhMCNd/cJzjFgkFFmFJyTQtiAJUw3cUwoZoxDeBwND8U2dGMI42QU7IXm88D4ob1ikoPFp81U=\",\n#     \"CASTGC\": \"TGT-568719-jrs08ja-RMNPaxJm9w5Noxz6JOUnJ6hPnHdDKj8ywLMRi3Xm4IynfwpGS0SCJbcZKqEnull_main\",\n#     \"JSESSIONID\": \"84AE62F8A8928808ECB4D9A499C50C09\",\n#     \"org.springframework.web.servlet.i18n.CookieLocaleResolver.LOCALE\": \"en\"\n# }\ncookies = get_ic_cookies()\nprint(cookies.cookies.get_dict())",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "cookies",
+        "kind": 5,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "cookies = get_ic_cookies()\nprint(cookies.cookies.get_dict())",
+        "detail": "main",
+        "documentation": {}
+    }
+]
