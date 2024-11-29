@@ -2,6 +2,7 @@ from bs4 import BeautifulSoup
 import requests
 import uuid
 import execjs
+from encrypt import encrypt_password
 
 
 def get_encrypted_pwd(password, salt):

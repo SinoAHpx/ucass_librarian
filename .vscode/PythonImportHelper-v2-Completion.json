@@ -1,5 +1,39 @@
 [
     {
+        "label": "AES",
+        "importPath": "Crypto.Cipher",
+        "description": "Crypto.Cipher",
+        "isExtraImport": true,
+        "detail": "Crypto.Cipher",
+        "documentation": {}
+    },
+    {
+        "label": "pad",
+        "importPath": "Crypto.Util.Padding",
+        "description": "Crypto.Util.Padding",
+        "isExtraImport": true,
+        "detail": "Crypto.Util.Padding",
+        "documentation": {}
+    },
+    {
+        "label": "base64",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "base64",
+        "description": "base64",
+        "detail": "base64",
+        "documentation": {}
+    },
+    {
+        "label": "random",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "random",
+        "description": "random",
+        "detail": "random",
+        "documentation": {}
+    },
+    {
         "label": "json",
         "kind": 6,
         "isExtraImport": true,
@@ -74,11 +108,11 @@
         "documentation": {}
     },
     {
-        "label": "login_session",
-        "importPath": "main",
-        "description": "main",
+        "label": "datetime",
+        "importPath": "datetime",
+        "description": "datetime",
         "isExtraImport": true,
-        "detail": "main",
+        "detail": "datetime",
         "documentation": {}
     },
     {
@@ -97,6 +131,32 @@
         "importPath": "execjs",
         "description": "execjs",
         "detail": "execjs",
+        "documentation": {}
+    },
+    {
+        "label": "encrypt_password",
+        "importPath": "encrypt",
+        "description": "encrypt",
+        "isExtraImport": true,
+        "detail": "encrypt",
+        "documentation": {}
+    },
+    {
+        "label": "random_string",
+        "kind": 2,
+        "importPath": "encrypt",
+        "description": "encrypt",
+        "peekOfCode": "def random_string(length):\n    chars = \"ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678\"\n    return ''.join(random.choice(chars) for _ in range(length))\ndef encrypt_password(password, key):\n    if not key:\n        return password\n    try:\n        # Generate a 64-character random prefix (matching JS implementation)\n        random_prefix = random_string(64)\n        # Combine prefix and password",
+        "detail": "encrypt",
+        "documentation": {}
+    },
+    {
+        "label": "encrypt_password",
+        "kind": 2,
+        "importPath": "encrypt",
+        "description": "encrypt",
+        "peekOfCode": "def encrypt_password(password, key):\n    if not key:\n        return password\n    try:\n        # Generate a 64-character random prefix (matching JS implementation)\n        random_prefix = random_string(64)\n        # Combine prefix and password\n        plaintext = (random_prefix + password).encode('utf-8')\n        # Pad key to 32 bytes\n        key_bytes = key.encode('utf-8')",
+        "detail": "encrypt",
         "documentation": {}
     },
     {
@@ -176,7 +236,7 @@
         "kind": 2,
         "importPath": "new",
         "description": "new",
-        "peekOfCode": "def issue_to_login_url():\n    issue_url = \"https://seat-lx.ucass.edu.cn/ic-web/auth/address?finalAddress=https://seat-lx.ucass.edu.cn&errPageUrl=https://seat-lx.ucass.edu.cn/#/error&manager=false&consoleType=16\"\n    headers = {\n        \"sec-ch-ua-platform\": \"\\\"macOS\\\"\",\n        \"user-agent\": USER_AGENT,\n        \"accept\": \"application/json, text/plain, */*\",\n        \"sec-ch-ua\": \"\\\"Not_A_Brand\\\";v=\\\"8\\\", \\\"Chromium\\\";v=\\\"120\\\", \\\"Google Chrome\\\";v=\\\"120\\\"\",\n        \"sec-ch-ua-mobile\": \"?0\",\n        \"sec-fetch-site\": \"same-origin\",\n        \"sec-fetch-mode\": \"cors\",",
+        "peekOfCode": "def issue_to_login_url():\n    issue_url = \"https://seat-lx.ucass.edu.cn/ic-web/auth/address?finalAddress=https://seat-lx.ucass.edu.cn&errPageUrl=https://seat-lx.ucass.edu.cn/#/error&manager=false&consoleType=16\"\n    resp = session.get(issue_url, allow_redirects=False)\n    json = resp.json()\n    return json[\"data\"]\ndef issue_form_login_url(to_login):\n    resp = session.get(to_login, allow_redirects=False)\n    redir = resp.headers[\"Location\"]\n    return redir\ndef login_form(form_url: str, username: str, password: str):",
         "detail": "new",
         "documentation": {}
     },
@@ -185,7 +245,7 @@
         "kind": 2,
         "importPath": "new",
         "description": "new",
-        "peekOfCode": "def issue_form_login_url(to_login):\n    headers = {\n        \"sec-ch-ua-platform\": \"\\\"macOS\\\"\",\n        \"user-agent\": USER_AGENT,\n        \"accept\": \"application/json, text/plain, */*\", \n        \"sec-ch-ua\": \"\\\"Not_A_Brand\\\";v=\\\"8\\\", \\\"Chromium\\\";v=\\\"120\\\", \\\"Google Chrome\\\";v=\\\"120\\\"\",\n        \"sec-ch-ua-mobile\": \"?0\",\n        \"sec-fetch-site\": \"same-origin\",\n        \"sec-fetch-mode\": \"cors\",\n        \"sec-fetch-dest\": \"empty\",",
+        "peekOfCode": "def issue_form_login_url(to_login):\n    resp = session.get(to_login, allow_redirects=False)\n    redir = resp.headers[\"Location\"]\n    return redir\ndef login_form(form_url: str, username: str, password: str):\n    #to get cookie\n    login_resp = session.get(form_url, allow_redirects=False)\n    login_resp = session.get(form_url, allow_redirects=False)\n    # start login\n    login_data = get_login_data(session, form_url, username, password)",
         "detail": "new",
         "documentation": {}
     },
@@ -194,7 +254,7 @@
         "kind": 2,
         "importPath": "new",
         "description": "new",
-        "peekOfCode": "def login_form(form_url: str, username: str, password: str):\n    login_session = requests.Session()\n    headers = {\n        \"sec-ch-ua-platform\": \"\\\"macOS\\\"\",\n        \"user-agent\": USER_AGENT,\n        \"accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\",\n        \"sec-ch-ua\": \"\\\"Not_A_Brand\\\";v=\\\"8\\\", \\\"Chromium\\\";v=\\\"120\\\", \\\"Google Chrome\\\";v=\\\"120\\\"\", \n        \"sec-ch-ua-mobile\": \"?0\",\n        \"sec-fetch-site\": \"same-origin\",\n        \"sec-fetch-mode\": \"navigate\",",
+        "peekOfCode": "def login_form(form_url: str, username: str, password: str):\n    #to get cookie\n    login_resp = session.get(form_url, allow_redirects=False)\n    login_resp = session.get(form_url, allow_redirects=False)\n    # start login\n    login_data = get_login_data(session, form_url, username, password)\n    login_resp = session.post(form_url, data=login_data, allow_redirects=False)\n    return login_resp\ndef get_ic_cookie(login_resp: requests.Response):\n    url = session.get_redirect_target(login_resp)",
         "detail": "new",
         "documentation": {}
     },
@@ -203,7 +263,43 @@
         "kind": 2,
         "importPath": "new",
         "description": "new",
-        "peekOfCode": "def get_ic_cookie(login_resp: requests.Response):\n    ic_session = requests.Session()\n    headers = {\n        \"sec-ch-ua-platform\": \"\\\"macOS\\\"\",\n        \"user-agent\": USER_AGENT,\n        \"accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\",\n        \"sec-ch-ua\": \"\\\"Not_A_Brand\\\";v=\\\"8\\\", \\\"Chromium\\\";v=\\\"120\\\", \\\"Google Chrome\\\";v=\\\"120\\\"\",\n        \"sec-ch-ua-mobile\": \"?0\",\n        \"sec-fetch-site\": \"same-origin\", \n        \"sec-fetch-mode\": \"navigate\",",
+        "peekOfCode": "def get_ic_cookie(login_resp: requests.Response):\n    url = session.get_redirect_target(login_resp)\n    ic_resp = session.get(url, allow_redirects=False)\n    url = session.get_redirect_target(ic_resp)\n    ic_resp = session.get(url, allow_redirects=False)\n    return ic_resp.cookies.get_dict()\ndef login(username, password):\n    to_login_url = issue_to_login_url()\n    form_url = issue_form_login_url(to_login_url)\n    login_resp = login_form(form_url, username, password)",
+        "detail": "new",
+        "documentation": {}
+    },
+    {
+        "label": "login",
+        "kind": 2,
+        "importPath": "new",
+        "description": "new",
+        "peekOfCode": "def login(username, password):\n    to_login_url = issue_to_login_url()\n    form_url = issue_form_login_url(to_login_url)\n    login_resp = login_form(form_url, username, password)\n    ic = get_ic_cookie(login_resp)\n    return ic[\"ic-cookie\"]\ndef get_lib_user_info(ic: str):\n    url = \"https://seat-lx.ucass.edu.cn/ic-web/auth/userInfo\"\n    session.cookies.update({\"ic-cookie\": ic})\n    resp = session.get(url)",
+        "detail": "new",
+        "documentation": {}
+    },
+    {
+        "label": "get_lib_user_info",
+        "kind": 2,
+        "importPath": "new",
+        "description": "new",
+        "peekOfCode": "def get_lib_user_info(ic: str):\n    url = \"https://seat-lx.ucass.edu.cn/ic-web/auth/userInfo\"\n    session.cookies.update({\"ic-cookie\": ic})\n    resp = session.get(url)\n    json = resp.json()\n    return json\n# result is to indicate whether a re-login is needed\ndef reserve(ic: str, seat: int, start_time: datetime, end_time: datetime) -> bool:\n    if start_time < datetime.now() or end_time < datetime.now():\n        print('start time or end time should not be ealier than current time. ')",
+        "detail": "new",
+        "documentation": {}
+    },
+    {
+        "label": "reserve",
+        "kind": 2,
+        "importPath": "new",
+        "description": "new",
+        "peekOfCode": "def reserve(ic: str, seat: int, start_time: datetime, end_time: datetime) -> bool:\n    if start_time < datetime.now() or end_time < datetime.now():\n        print('start time or end time should not be ealier than current time. ')\n        return True\n    url = \"https://seat-lx.ucass.edu.cn/ic-web/reserve\"\n    json = get_lib_user_info(ic)\n    if json[\"code\"] != 0:\n        print('Login expired')\n        return False\n    json = json[\"data\"]",
+        "detail": "new",
+        "documentation": {}
+    },
+    {
+        "label": "get_seat_menu",
+        "kind": 2,
+        "importPath": "new",
+        "description": "new",
+        "peekOfCode": "def get_seat_menu():\n    url = \"https://seat-lx.ucass.edu.cn/ic-web/seatMenu\"\n# reserve_params = {\n#     'ic': \"84d6850c-7079-4d94-8f3f-c1b826a95dad\",\n#     'seat': 100237659,\n#     'start_time': datetime(2024,11,29,20,00,00),\n#     'end_time': datetime(2024,11,29,22,00,00)\n# }\n# if not reserve(**reserve_params):\n#     ic = login(\"20241141128\", \"frNwzTNNeGnAkkq6ADpAqv*ZGvPHYU\")",
         "detail": "new",
         "documentation": {}
     },
@@ -212,25 +308,16 @@
         "kind": 5,
         "importPath": "new",
         "description": "new",
-        "peekOfCode": "USER_AGENT = \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36\"\ndef issue_to_login_url():\n    issue_url = \"https://seat-lx.ucass.edu.cn/ic-web/auth/address?finalAddress=https://seat-lx.ucass.edu.cn&errPageUrl=https://seat-lx.ucass.edu.cn/#/error&manager=false&consoleType=16\"\n    headers = {\n        \"sec-ch-ua-platform\": \"\\\"macOS\\\"\",\n        \"user-agent\": USER_AGENT,\n        \"accept\": \"application/json, text/plain, */*\",\n        \"sec-ch-ua\": \"\\\"Not_A_Brand\\\";v=\\\"8\\\", \\\"Chromium\\\";v=\\\"120\\\", \\\"Google Chrome\\\";v=\\\"120\\\"\",\n        \"sec-ch-ua-mobile\": \"?0\",\n        \"sec-fetch-site\": \"same-origin\",",
+        "peekOfCode": "USER_AGENT = \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36\"\nsession = requests.Session()\nsession.headers.update({\n    \"User-Agent\": USER_AGENT\n})\ndef issue_to_login_url():\n    issue_url = \"https://seat-lx.ucass.edu.cn/ic-web/auth/address?finalAddress=https://seat-lx.ucass.edu.cn&errPageUrl=https://seat-lx.ucass.edu.cn/#/error&manager=false&consoleType=16\"\n    resp = session.get(issue_url, allow_redirects=False)\n    json = resp.json()\n    return json[\"data\"]",
         "detail": "new",
         "documentation": {}
     },
     {
-        "label": "to_login_url",
+        "label": "session",
         "kind": 5,
         "importPath": "new",
         "description": "new",
-        "peekOfCode": "to_login_url = issue_to_login_url()\nform_url = issue_form_login_url(to_login_url)\nlogin_session, login_resp = login_form(form_url, '20241141128', 'frNwzTNNeGnAkkq6ADpAqv*ZGvPHYU')\nic = get_ic_cookie(login_resp)\nprint(ic)",
-        "detail": "new",
-        "documentation": {}
-    },
-    {
-        "label": "form_url",
-        "kind": 5,
-        "importPath": "new",
-        "description": "new",
-        "peekOfCode": "form_url = issue_form_login_url(to_login_url)\nlogin_session, login_resp = login_form(form_url, '20241141128', 'frNwzTNNeGnAkkq6ADpAqv*ZGvPHYU')\nic = get_ic_cookie(login_resp)\nprint(ic)",
+        "peekOfCode": "session = requests.Session()\nsession.headers.update({\n    \"User-Agent\": USER_AGENT\n})\ndef issue_to_login_url():\n    issue_url = \"https://seat-lx.ucass.edu.cn/ic-web/auth/address?finalAddress=https://seat-lx.ucass.edu.cn&errPageUrl=https://seat-lx.ucass.edu.cn/#/error&manager=false&consoleType=16\"\n    resp = session.get(issue_url, allow_redirects=False)\n    json = resp.json()\n    return json[\"data\"]\ndef issue_form_login_url(to_login):",
         "detail": "new",
         "documentation": {}
     },
@@ -239,7 +326,7 @@
         "kind": 5,
         "importPath": "new",
         "description": "new",
-        "peekOfCode": "ic = get_ic_cookie(login_resp)\nprint(ic)",
+        "peekOfCode": "ic = login(\"20241141128\", \"frNwzTNNeGnAkkq6ADpAqv*ZGvPHYU\")\nprint(ic)\n# j = get_lib_user_info(\"68435aaf-32bd-4549-be70-85e80c005a9c\")\n# print(j)",
         "detail": "new",
         "documentation": {}
     },
