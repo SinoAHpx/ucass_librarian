@@ -9,6 +9,14 @@
         "documentation": {}
     },
     {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
         "label": "BeautifulSoup",
         "importPath": "bs4",
         "description": "bs4",
@@ -17,12 +25,11 @@
         "documentation": {}
     },
     {
-        "label": "execjs",
-        "kind": 6,
+        "label": "BeautifulSoup",
+        "importPath": "bs4",
+        "description": "bs4",
         "isExtraImport": true,
-        "importPath": "execjs",
-        "description": "execjs",
-        "detail": "execjs",
+        "detail": "bs4",
         "documentation": {}
     },
     {
@@ -35,6 +42,30 @@
         "documentation": {}
     },
     {
+        "label": "get_encrypted_pwd",
+        "importPath": "utils",
+        "description": "utils",
+        "isExtraImport": true,
+        "detail": "utils",
+        "documentation": {}
+    },
+    {
+        "label": "get_login_data",
+        "importPath": "utils",
+        "description": "utils",
+        "isExtraImport": true,
+        "detail": "utils",
+        "documentation": {}
+    },
+    {
+        "label": "get_random_uuid",
+        "importPath": "utils",
+        "description": "utils",
+        "isExtraImport": true,
+        "detail": "utils",
+        "documentation": {}
+    },
+    {
         "label": "uuid",
         "kind": 6,
         "isExtraImport": true,
@@ -44,20 +75,20 @@
         "documentation": {}
     },
     {
-        "label": "get_encrypted_pwd",
-        "kind": 2,
-        "importPath": "main",
-        "description": "main",
-        "peekOfCode": "def get_encrypted_pwd(password, salt):\n    with open('encrypt.js', 'r') as file:\n        js_code = file.read()\n    ctx = execjs.compile(js_code)\n    result = ctx.call('encryptPassword', password, salt)\n    return result\ndef get_random_uuid():\n    return str(uuid.uuid4()).replace('-', '')\ndef login(username, password):\n    request_uuid = get_random_uuid()",
-        "detail": "main",
+        "label": "execjs",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "execjs",
+        "description": "execjs",
+        "detail": "execjs",
         "documentation": {}
     },
     {
-        "label": "get_random_uuid",
+        "label": "get_cookies",
         "kind": 2,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "def get_random_uuid():\n    return str(uuid.uuid4()).replace('-', '')\ndef login(username, password):\n    request_uuid = get_random_uuid()\n    redirect_resp = session.get(f\"https://seat-lx.ucass.edu.cn/authcenter/toLoginPage?redirectUrl=https://seat-lx.ucass.edu.cn/ic-web//auth/token?uuid={request_uuid}&extInfo=\", headers=GENERAL_HEADERS, allow_redirects=False)\n    login_url = \"https://authserver.ucass.edu.cn/authserver/login?service=http%3A%2F%2Fseat-lx.ucass.edu.cn%2Fauthcenter%2FdoAuth%2F6113ee0c8b244a1792bad68392a1672c\"\n    login_resp = session.get(login_url, allow_redirects=False)\n    soup = BeautifulSoup(login_resp.text, 'html.parser')\n    salt_element = soup.find(id='pwdEncryptSalt')\n    execution_element = soup.find(id='execution')",
+        "peekOfCode": "def get_cookies(session: requests.Session) -> bool:\n    path = Path(\"cookies.json\")\n    if path.exists():\n        cookies_text = path.read_text()\n        cookies_dict = json.loads(cookies_text)\n        session.cookies.update(cookies_dict)\n        return True\n    else:\n        return False\ndef login(username, password):",
         "detail": "main",
         "documentation": {}
     },
@@ -66,25 +97,16 @@
         "kind": 2,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "def login(username, password):\n    request_uuid = get_random_uuid()\n    redirect_resp = session.get(f\"https://seat-lx.ucass.edu.cn/authcenter/toLoginPage?redirectUrl=https://seat-lx.ucass.edu.cn/ic-web//auth/token?uuid={request_uuid}&extInfo=\", headers=GENERAL_HEADERS, allow_redirects=False)\n    login_url = \"https://authserver.ucass.edu.cn/authserver/login?service=http%3A%2F%2Fseat-lx.ucass.edu.cn%2Fauthcenter%2FdoAuth%2F6113ee0c8b244a1792bad68392a1672c\"\n    login_resp = session.get(login_url, allow_redirects=False)\n    soup = BeautifulSoup(login_resp.text, 'html.parser')\n    salt_element = soup.find(id='pwdEncryptSalt')\n    execution_element = soup.find(id='execution')\n    salt = salt_element['value'] if salt_element else \"\"\n    execution = execution_element['value'] if execution_element else \"\"",
+        "peekOfCode": "def login(username, password):\n    session = requests.Session()\n    if not get_cookies(session):\n        login_url = \"https://authserver.ucass.edu.cn/authserver/login\"\n        login_data = get_login_data(session, login_url, username, password)\n        # cookie should have JESSIONID, springframework\n        # expect: 302, cookies\n        login_resp = session.post(login_url, data=login_data, allow_redirects=False)\n        login_do_url = session.get_redirect_target(login_resp)\n        login_do_resp = session.get(login_do_url, allow_redirects=False)",
         "detail": "main",
         "documentation": {}
     },
     {
-        "label": "ticket_auth",
+        "label": "seats_login",
         "kind": 2,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "def ticket_auth(url: str, use_https: bool = False) -> requests.Response:\n    if use_https:\n        url = url.replace(\"http://\", \"https://\")\n    auth_resp = session.get(url, allow_redirects=False)\n    return auth_resp\ndef get_ic_cookies():\n    request_uuid = get_random_uuid()\n    login_redirect_resp = session.get(f\"https://seat-lx.ucass.edu.cn/authcenter/toLoginPage?redirectUrl=https://seat-lx.ucass.edu.cn/ic-web//auth/token?uuid={request_uuid}&extInfo=\", allow_redirects=False)\n    login_url = login_redirect_resp.headers[\"Location\"]\n    login_resp = session.get(login_url, allow_redirects=False)",
-        "detail": "main",
-        "documentation": {}
-    },
-    {
-        "label": "get_ic_cookies",
-        "kind": 2,
-        "importPath": "main",
-        "description": "main",
-        "peekOfCode": "def get_ic_cookies():\n    request_uuid = get_random_uuid()\n    login_redirect_resp = session.get(f\"https://seat-lx.ucass.edu.cn/authcenter/toLoginPage?redirectUrl=https://seat-lx.ucass.edu.cn/ic-web//auth/token?uuid={request_uuid}&extInfo=\", allow_redirects=False)\n    login_url = login_redirect_resp.headers[\"Location\"]\n    login_resp = session.get(login_url, allow_redirects=False)\n    ticket_url = login_resp.headers[\"Location\"]\n    ticket_resp = ticket_auth(ticket_url)\n    unitoken_url = ticket_resp.headers[\"Location\"]\n    unitoken_resp = session.get(unitoken_url)\n    final_ticket_resp = ticket_auth(ticket_url, True)",
+        "peekOfCode": "def seats_login(login_session: requests.Session):\n    seat_session = requests.session()\n    issue_to_login = 'https://seat-lx.ucass.edu.cn/ic-web/auth/address?finalAddress=https:%2F%2Fseat-lx.ucass.edu.cn&errPageUrl=https:%2F%2Fseat-lx.ucass.edu.cn%2F%23%2Ferror&manager=false&consoleType=16'\n    issue_to_login_resp = seat_session.get(issue_to_login, allow_redirects=False)\n    to_login_url = issue_to_login_resp.json()[\"data\"]\n    to_login_resp = login_session.get(to_login_url, allow_redirects=False)\n    auth_url = login_session.get_redirect_target(to_login_resp)\n    auth_resp = login_session.get(auth_url, allow_redirects=False)\n    ticket_url = seat_session.get_redirect_target(auth_resp)\n    ticket_resp = seat_session.get(ticket_url, allow_redirects=False)",
         "detail": "main",
         "documentation": {}
     },
@@ -93,7 +115,7 @@
         "kind": 5,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "USER_AGENT = \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36\"\nGENERAL_HEADERS = {\n    'User-Agent': USER_AGENT,\n}\nsession = requests.Session()\ndef get_encrypted_pwd(password, salt):\n    with open('encrypt.js', 'r') as file:\n        js_code = file.read()\n    ctx = execjs.compile(js_code)\n    result = ctx.call('encryptPassword', password, salt)",
+        "peekOfCode": "USER_AGENT = \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36\"\nGENERAL_HEADERS = {\n    'User-Agent': USER_AGENT,\n}\ndef get_cookies(session: requests.Session) -> bool:\n    path = Path(\"cookies.json\")\n    if path.exists():\n        cookies_text = path.read_text()\n        cookies_dict = json.loads(cookies_text)\n        session.cookies.update(cookies_dict)",
         "detail": "main",
         "documentation": {}
     },
@@ -102,44 +124,62 @@
         "kind": 5,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "GENERAL_HEADERS = {\n    'User-Agent': USER_AGENT,\n}\nsession = requests.Session()\ndef get_encrypted_pwd(password, salt):\n    with open('encrypt.js', 'r') as file:\n        js_code = file.read()\n    ctx = execjs.compile(js_code)\n    result = ctx.call('encryptPassword', password, salt)\n    return result",
+        "peekOfCode": "GENERAL_HEADERS = {\n    'User-Agent': USER_AGENT,\n}\ndef get_cookies(session: requests.Session) -> bool:\n    path = Path(\"cookies.json\")\n    if path.exists():\n        cookies_text = path.read_text()\n        cookies_dict = json.loads(cookies_text)\n        session.cookies.update(cookies_dict)\n        return True",
         "detail": "main",
         "documentation": {}
     },
     {
-        "label": "session",
+        "label": "login_session",
         "kind": 5,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "session = requests.Session()\ndef get_encrypted_pwd(password, salt):\n    with open('encrypt.js', 'r') as file:\n        js_code = file.read()\n    ctx = execjs.compile(js_code)\n    result = ctx.call('encryptPassword', password, salt)\n    return result\ndef get_random_uuid():\n    return str(uuid.uuid4()).replace('-', '')\ndef login(username, password):",
+        "peekOfCode": "login_session = login('20241141128', 'frNwzTNNeGnAkkq6ADpAqv*ZGvPHYU')\nseats_resp = login_session.get('https://seat-lx.ucass.edu.cn/#/ic/home', allow_redirects=False)\nseats_resp = seats_login(login_session)\nprint(seats_resp.cookies.get_dict())",
         "detail": "main",
         "documentation": {}
     },
     {
-        "label": "login_response",
+        "label": "seats_resp",
         "kind": 5,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "login_response = login('20241141128', 'frNwzTNNeGnAkkq6ADpAqv*ZGvPHYU')\nlogin_cookies = login_response.cookies\ncookies = get_ic_cookies()",
+        "peekOfCode": "seats_resp = login_session.get('https://seat-lx.ucass.edu.cn/#/ic/home', allow_redirects=False)\nseats_resp = seats_login(login_session)\nprint(seats_resp.cookies.get_dict())",
         "detail": "main",
         "documentation": {}
     },
     {
-        "label": "login_cookies",
+        "label": "seats_resp",
         "kind": 5,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "login_cookies = login_response.cookies\ncookies = get_ic_cookies()",
+        "peekOfCode": "seats_resp = seats_login(login_session)\nprint(seats_resp.cookies.get_dict())",
         "detail": "main",
         "documentation": {}
     },
     {
-        "label": "cookies",
-        "kind": 5,
-        "importPath": "main",
-        "description": "main",
-        "peekOfCode": "cookies = get_ic_cookies()",
-        "detail": "main",
+        "label": "get_encrypted_pwd",
+        "kind": 2,
+        "importPath": "utils",
+        "description": "utils",
+        "peekOfCode": "def get_encrypted_pwd(password, salt):\n    with open('encrypt.js', 'r') as file:\n        js_code = file.read()\n    ctx = execjs.compile(js_code)\n    result = ctx.call('encryptPassword', password, salt)\n    return result\ndef get_random_uuid():\n    return str(uuid.uuid4()).replace('-', '')\ndef get_login_data(session: requests.Session, login_url, username, password):\n    login_resp = session.get(login_url, allow_redirects=False)",
+        "detail": "utils",
+        "documentation": {}
+    },
+    {
+        "label": "get_random_uuid",
+        "kind": 2,
+        "importPath": "utils",
+        "description": "utils",
+        "peekOfCode": "def get_random_uuid():\n    return str(uuid.uuid4()).replace('-', '')\ndef get_login_data(session: requests.Session, login_url, username, password):\n    login_resp = session.get(login_url, allow_redirects=False)\n    soup = BeautifulSoup(login_resp.text, 'html.parser')\n    salt_element = soup.find(id='pwdEncryptSalt')\n    execution_element = soup.find(id='execution')\n    salt = salt_element['value'] if salt_element else \"\"\n    execution = execution_element['value'] if execution_element else \"\"\n    encrypted_password = get_encrypted_pwd(password, salt)",
+        "detail": "utils",
+        "documentation": {}
+    },
+    {
+        "label": "get_login_data",
+        "kind": 2,
+        "importPath": "utils",
+        "description": "utils",
+        "peekOfCode": "def get_login_data(session: requests.Session, login_url, username, password):\n    login_resp = session.get(login_url, allow_redirects=False)\n    soup = BeautifulSoup(login_resp.text, 'html.parser')\n    salt_element = soup.find(id='pwdEncryptSalt')\n    execution_element = soup.find(id='execution')\n    salt = salt_element['value'] if salt_element else \"\"\n    execution = execution_element['value'] if execution_element else \"\"\n    encrypted_password = get_encrypted_pwd(password, salt)\n    login_data = {\n        \"username\": username,",
+        "detail": "utils",
         "documentation": {}
     }
 ]
