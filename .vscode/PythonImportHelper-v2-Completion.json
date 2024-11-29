@@ -66,6 +66,22 @@
         "documentation": {}
     },
     {
+        "label": "get_login_data",
+        "importPath": "utils",
+        "description": "utils",
+        "isExtraImport": true,
+        "detail": "utils",
+        "documentation": {}
+    },
+    {
+        "label": "login_session",
+        "importPath": "main",
+        "description": "main",
+        "isExtraImport": true,
+        "detail": "main",
+        "documentation": {}
+    },
+    {
         "label": "uuid",
         "kind": 6,
         "isExtraImport": true,
@@ -153,6 +169,78 @@
         "description": "main",
         "peekOfCode": "seats_resp = seats_login(login_session)\nprint(seats_resp.cookies.get_dict())",
         "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "issue_to_login_url",
+        "kind": 2,
+        "importPath": "new",
+        "description": "new",
+        "peekOfCode": "def issue_to_login_url():\n    issue_url = \"https://seat-lx.ucass.edu.cn/ic-web/auth/address?finalAddress=https://seat-lx.ucass.edu.cn&errPageUrl=https://seat-lx.ucass.edu.cn/#/error&manager=false&consoleType=16\"\n    headers = {\n        \"sec-ch-ua-platform\": \"\\\"macOS\\\"\",\n        \"user-agent\": USER_AGENT,\n        \"accept\": \"application/json, text/plain, */*\",\n        \"sec-ch-ua\": \"\\\"Not_A_Brand\\\";v=\\\"8\\\", \\\"Chromium\\\";v=\\\"120\\\", \\\"Google Chrome\\\";v=\\\"120\\\"\",\n        \"sec-ch-ua-mobile\": \"?0\",\n        \"sec-fetch-site\": \"same-origin\",\n        \"sec-fetch-mode\": \"cors\",",
+        "detail": "new",
+        "documentation": {}
+    },
+    {
+        "label": "issue_form_login_url",
+        "kind": 2,
+        "importPath": "new",
+        "description": "new",
+        "peekOfCode": "def issue_form_login_url(to_login):\n    headers = {\n        \"sec-ch-ua-platform\": \"\\\"macOS\\\"\",\n        \"user-agent\": USER_AGENT,\n        \"accept\": \"application/json, text/plain, */*\", \n        \"sec-ch-ua\": \"\\\"Not_A_Brand\\\";v=\\\"8\\\", \\\"Chromium\\\";v=\\\"120\\\", \\\"Google Chrome\\\";v=\\\"120\\\"\",\n        \"sec-ch-ua-mobile\": \"?0\",\n        \"sec-fetch-site\": \"same-origin\",\n        \"sec-fetch-mode\": \"cors\",\n        \"sec-fetch-dest\": \"empty\",",
+        "detail": "new",
+        "documentation": {}
+    },
+    {
+        "label": "login_form",
+        "kind": 2,
+        "importPath": "new",
+        "description": "new",
+        "peekOfCode": "def login_form(form_url: str, username: str, password: str):\n    login_session = requests.Session()\n    headers = {\n        \"sec-ch-ua-platform\": \"\\\"macOS\\\"\",\n        \"user-agent\": USER_AGENT,\n        \"accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\",\n        \"sec-ch-ua\": \"\\\"Not_A_Brand\\\";v=\\\"8\\\", \\\"Chromium\\\";v=\\\"120\\\", \\\"Google Chrome\\\";v=\\\"120\\\"\", \n        \"sec-ch-ua-mobile\": \"?0\",\n        \"sec-fetch-site\": \"same-origin\",\n        \"sec-fetch-mode\": \"navigate\",",
+        "detail": "new",
+        "documentation": {}
+    },
+    {
+        "label": "get_ic_cookie",
+        "kind": 2,
+        "importPath": "new",
+        "description": "new",
+        "peekOfCode": "def get_ic_cookie(login_resp: requests.Response):\n    ic_session = requests.Session()\n    headers = {\n        \"sec-ch-ua-platform\": \"\\\"macOS\\\"\",\n        \"user-agent\": USER_AGENT,\n        \"accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\",\n        \"sec-ch-ua\": \"\\\"Not_A_Brand\\\";v=\\\"8\\\", \\\"Chromium\\\";v=\\\"120\\\", \\\"Google Chrome\\\";v=\\\"120\\\"\",\n        \"sec-ch-ua-mobile\": \"?0\",\n        \"sec-fetch-site\": \"same-origin\", \n        \"sec-fetch-mode\": \"navigate\",",
+        "detail": "new",
+        "documentation": {}
+    },
+    {
+        "label": "USER_AGENT",
+        "kind": 5,
+        "importPath": "new",
+        "description": "new",
+        "peekOfCode": "USER_AGENT = \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36\"\ndef issue_to_login_url():\n    issue_url = \"https://seat-lx.ucass.edu.cn/ic-web/auth/address?finalAddress=https://seat-lx.ucass.edu.cn&errPageUrl=https://seat-lx.ucass.edu.cn/#/error&manager=false&consoleType=16\"\n    headers = {\n        \"sec-ch-ua-platform\": \"\\\"macOS\\\"\",\n        \"user-agent\": USER_AGENT,\n        \"accept\": \"application/json, text/plain, */*\",\n        \"sec-ch-ua\": \"\\\"Not_A_Brand\\\";v=\\\"8\\\", \\\"Chromium\\\";v=\\\"120\\\", \\\"Google Chrome\\\";v=\\\"120\\\"\",\n        \"sec-ch-ua-mobile\": \"?0\",\n        \"sec-fetch-site\": \"same-origin\",",
+        "detail": "new",
+        "documentation": {}
+    },
+    {
+        "label": "to_login_url",
+        "kind": 5,
+        "importPath": "new",
+        "description": "new",
+        "peekOfCode": "to_login_url = issue_to_login_url()\nform_url = issue_form_login_url(to_login_url)\nlogin_session, login_resp = login_form(form_url, '20241141128', 'frNwzTNNeGnAkkq6ADpAqv*ZGvPHYU')\nic = get_ic_cookie(login_resp)\nprint(ic)",
+        "detail": "new",
+        "documentation": {}
+    },
+    {
+        "label": "form_url",
+        "kind": 5,
+        "importPath": "new",
+        "description": "new",
+        "peekOfCode": "form_url = issue_form_login_url(to_login_url)\nlogin_session, login_resp = login_form(form_url, '20241141128', 'frNwzTNNeGnAkkq6ADpAqv*ZGvPHYU')\nic = get_ic_cookie(login_resp)\nprint(ic)",
+        "detail": "new",
+        "documentation": {}
+    },
+    {
+        "label": "ic",
+        "kind": 5,
+        "importPath": "new",
+        "description": "new",
+        "peekOfCode": "ic = get_ic_cookie(login_resp)\nprint(ic)",
+        "detail": "new",
         "documentation": {}
     },
     {
