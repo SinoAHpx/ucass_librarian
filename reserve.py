@@ -63,7 +63,6 @@ def reserve(ic: str, seat: int, start_time: datetime, end_time: datetime) -> boo
 
 def get_seats_info(ic: str, room_id: int, date: datetime):
     session.cookies.update({"ic-cookie": ic})
-    
     date = date.strftime("%Y%m%d")
     url = f"https://seat-lx.ucass.edu.cn/ic-web/reserve?roomIds={room_id}&resvDates={date}&sysKind=8"
     
@@ -75,3 +74,22 @@ def get_seats_info(ic: str, room_id: int, date: datetime):
         return
     
     return json
+
+def get_available_seats(json):
+    # session.cookies.update({"ic-cookie": ic})
+    
+    data = json["data"]
+    
+    for seat in data:
+        if len(seat["resvInfo"]) == 0:
+            continue
+        info = seat["resvInfo"][0]
+        start = datetime.fromtimestamp(info["startTime"] / 1000)
+        initial = start.replace(hour=8, minute=0, second=0)
+        print(f'Seat: {seat["devName"]} / {start}')
+        continue
+        if start - initial > timedelta(hours=4):
+            print(f'Seat: {seat["devName"]} / {start}')
+        
+# json = get_seats_info("83f1257b-47fd-4d8a-9bb3-ffc8f4e29d65", 100236920, datetime.now() + timedelta(days=1))
+# get_available_seats(json)
