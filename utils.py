@@ -1,15 +1,11 @@
 from bs4 import BeautifulSoup
 import requests
 import uuid
-import execjs
+
+from encrypt import encrypt_password
 
 def get_encrypted_pwd(password, salt):
-    with open('encrypt.js', 'r') as file:
-        js_code = file.read()
-        
-    ctx = execjs.compile(js_code)
-    
-    result = ctx.call('encryptPassword', password, salt)
+    result = encrypt_password(password, salt)
     
     return result
 
