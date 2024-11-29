@@ -908,3 +908,4 @@ function decryptPassword(n, f) {
 }
 
 console.log(encryptPassword("frNwzTNNeGnAkkq6ADpAqv*ZGvPHYU", "F9be0zpobE1zsNmv"));
+console.log('hi')
