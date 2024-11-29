@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 import requests
 
 session = requests.Session()
@@ -61,6 +61,17 @@ def reserve(ic: str, seat: int, start_time: datetime, end_time: datetime) -> boo
         print('login was expired, please another login.')
         return False
 
-def get_seat_menu():
-    url = "https://seat-lx.ucass.edu.cn/ic-web/seatMenu"
+def get_seats_info(ic: str, room_id: int, date: datetime):
+    session.cookies.update({"ic-cookie": ic})
     
+    date = date.strftime("%Y%m%d")
+    url = f"https://seat-lx.ucass.edu.cn/ic-web/reserve?roomIds={room_id}&resvDates={date}&sysKind=8"
+    
+    resp = session.get(url)
+    json = resp.json()
+    
+    if json["code"] != 0:
+        print('Some error, maybe you are not login')
+        return
+    
+    return json
