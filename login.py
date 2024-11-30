@@ -43,11 +43,15 @@ def get_ic_cookie(login_resp: requests.Response):
     
     return ic_resp.cookies.get_dict()
 
-def login(username, password):
-    to_login_url = issue_to_login_url()
-    form_url = issue_form_login_url(to_login_url)
-    login_resp = login_form(form_url, username, password)
+def login(username, password) -> str | None:
+    try:
+        to_login_url = issue_to_login_url()
+        form_url = issue_form_login_url(to_login_url)
+        login_resp = login_form(form_url, username, password)
 
-    ic = get_ic_cookie(login_resp)
+        ic = get_ic_cookie(login_resp)
 
-    return ic["ic-cookie"]
+        return ic["ic-cookie"]
+    except Exception as e:
+        print(e)
+        return None

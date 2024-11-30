@@ -1,5 +1,16 @@
 from datetime import datetime, timedelta
+from enum import Enum
 import requests
+
+class Room(Enum):
+    A201 = 100236916
+    A204 = 100236920
+    A203 = 100236918
+    
+    A301 = 100236924
+    A302 = 100236926
+    A304 = 100236930
+    A305 = 100236932
 
 session = requests.Session()
 
@@ -61,10 +72,10 @@ def reserve(ic: str, seat: int, start_time: datetime, end_time: datetime) -> boo
         print('login was expired, please another login.')
         return False
 
-def get_seats_info(ic: str, room_id: int, date: datetime):
+def get_seats_info(ic: str, room: Room, date: datetime):
     session.cookies.update({"ic-cookie": ic})
     date = date.strftime("%Y%m%d")
-    url = f"https://seat-lx.ucass.edu.cn/ic-web/reserve?roomIds={room_id}&resvDates={date}&sysKind=8"
+    url = f"https://seat-lx.ucass.edu.cn/ic-web/reserve?roomIds={room}&resvDates={date}&sysKind=8"
     
     resp = session.get(url)
     json = resp.json()
@@ -87,9 +98,6 @@ def get_available_seats(json):
         start = datetime.fromtimestamp(info["startTime"] / 1000)
         initial = start.replace(hour=8, minute=0, second=0)
         print(f'Seat: {seat["devName"]} / {start}')
-        continue
+        # continue
         if start - initial > timedelta(hours=4):
             print(f'Seat: {seat["devName"]} / {start}')
-        
-# json = get_seats_info("83f1257b-47fd-4d8a-9bb3-ffc8f4e29d65", 100236920, datetime.now() + timedelta(days=1))
-# get_available_seats(json)
