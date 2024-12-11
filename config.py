@@ -23,6 +23,7 @@ class Schedule:
 class Notifier:
     gmail: str | None
     password: str | None
+    recipient: str | None
 
 @dataclass
 class Config:
@@ -45,12 +46,19 @@ def write_config(config: Config):
     with open('config.yaml', 'w') as file:
         yaml.dump(config_dict, file, sort_keys=False)
 
+_config_cache = None
+
 def read_config() -> Config | None:
+    global _config_cache
+    if _config_cache is not None:
+        return _config_cache
+    
     if not Path('config.yaml').is_file():
         return None
+        
     with open('config.yaml', 'r') as file:
         data = yaml.safe_load(file)
-        return Config(
+        _config_cache = Config(
             user=User(**data['user']),
             slot=Slot(**data['slot']),
             schedule=Schedule(
@@ -60,3 +68,4 @@ def read_config() -> Config | None:
             ),
             notifier=Notifier(**data['notifier'])
         )
+        return _config_cache
