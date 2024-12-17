@@ -2,10 +2,6 @@ import yagmail
 
 from config import read_config
 
-def send_email(content: str):
-    conf = read_config()
-    if conf == None:
-        return
-    
-    yag = yagmail.SMTP(user=conf.notifier.gmail, password=conf.notifier.password)
-    yag.send(conf.notifier.recipient, subject="UCASS librarian report", contents=content)
+def send_email(sender, password, recipient, content: str):
+    yag = yagmail.SMTP(user=sender, password=password)
+    yag.send(recipient, subject="UCASS librarian report", contents=content)

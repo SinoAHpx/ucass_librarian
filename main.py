@@ -1,23 +1,12 @@
 # this is for executing the script
 
 import sys
+from config import read_config, write_default_config
 from login import *
 from reserve import *
 
-args = sys.argv[1:]
-
-#arg[0]: username, [1]: password, [2]: seat
-if len(args) != 3:
-    print(f'Please check your ares is proper: {args}')
-    exit(-1)
-    
-#todo: save 'rememer me' cookie to reduce login
-
-cookie = login(args[0], args[1])
-if cookie == None:
-    print(f'Login failed, check args: {args}')
-    exit(-2)
-    
-print(f'Login successfully, cookie: {cookie}')
-
-print(f'Start reserving: {args[2]}')
+conf = read_config()
+if conf == None:
+    print('An empty config was generated as there\'s none, please fill out information.')
+    write_default_config()
+    exit()

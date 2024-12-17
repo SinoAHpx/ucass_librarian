@@ -32,16 +32,26 @@ class Config:
     schedule: Schedule
     notifier: Notifier
 
-def write_config(config: Config):
+def write_default_config():
     config_dict = {
-        'user': vars(config.user),
-        'slot': vars(config.slot),
-        'schedule': {
-            'date': config.schedule.date.strftime("%Y/%m/%d"),
-            'start_time': config.schedule.start_time.strftime("%H:%M:%S"),
-            'end_time': config.schedule.end_time.strftime("%H:%M:%S")
+        'user': {
+            'username': 'your student card number',
+            'password': 'your password'
         },
-        'notifier': vars(config.notifier)
+        'slot': {
+            'room': 'the room, example: A201',
+            'seat': 'the seat, example: 001'
+        },
+        'schedule': {
+            'date': datetime.now().strftime("%Y/%m/%d"),
+            'start_time': '08:00:00',
+            'end_time': '22:00:00'
+        },
+        'notifier': {
+            'gmail': None,
+            'password': None, 
+            'recipient': None
+        }
     }
     with open('config.yaml', 'w') as file:
         yaml.dump(config_dict, file, sort_keys=False)
